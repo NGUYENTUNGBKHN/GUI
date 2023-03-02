@@ -3,6 +3,7 @@
 #include "libcpp.h"
 
 // include
+#include "Array.h"
 #include "MapDefPtr.h"
 #include "Map.h"
 

@@ -15,6 +15,18 @@ public:
     {
 
     }
+
+
+    void Append(Map<T1,T2> mSrc)
+    {
+        Array<T1> a = mSrc.Keys();
+        for (int i = 0; i < a.GetSize(); i++)
+        {
+            T1 key = a[i];
+            T2 val = mSrc[key];
+            (*this)[key] = val;
+        }
+    }
 };
 
 
