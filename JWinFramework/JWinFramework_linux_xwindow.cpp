@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "libcpp.h"
+#include "JWin.h"
+
 #include <sys/utsname.h>
 
 #define DISPLAY_W 1280
@@ -25,6 +28,7 @@ static Window win;
 static GC gc;
 static int screen;
 static Atom wm_delete_window;
+static JImage *p_JImage;
 
 void Paint()
 {

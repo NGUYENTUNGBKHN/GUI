@@ -2,6 +2,10 @@
 
 class JPoint
 {
+
+public:
+    int x;
+    int y;
 private:
     /* data */
 public:

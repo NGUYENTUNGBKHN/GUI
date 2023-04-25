@@ -7,9 +7,11 @@
 #include "MapDefPtr.h"
 #include "Map.h"
 
+
 #include "JDraw.h"
 #include "JImage.h"
-
+#include "JPoint.h"
+#include "JRect.h"
 
 
 
