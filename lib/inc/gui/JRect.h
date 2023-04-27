@@ -13,6 +13,11 @@ public:
         set(0, 0, 0, 0);
     }
 
+    JRect(int x, int y, int w, int h)
+	{
+		set(x, y, w, h);
+	}
+
     void set(int x, int y, int w, int h)
     {
         this->x = x;

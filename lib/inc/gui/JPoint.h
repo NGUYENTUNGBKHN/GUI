@@ -2,15 +2,26 @@
 
 class JPoint
 {
+public:
+	int		x;
+	int		y;
+public:
+	JPoint()
+	{
+		set(0, 0);
+	}
 
-public:
-    int x;
-    int y;
-private:
-    /* data */
-public:
-    JPoint(/* args */);
-    ~JPoint();
+	JPoint(int x, int y)
+	{
+		set(x, y);
+	}
+
+	void set(int x, int y)
+	{
+		this->x = x;
+		this->y = y;
+	}
 };
+
 
 

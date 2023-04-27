@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include "libcpp.h"
 #include "JWin.h"
+
 
 extern int JWIN_Framework(int argc, char *argv[]);
 

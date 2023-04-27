@@ -47,7 +47,46 @@ typedef unsigned short			WORD;
 #ifdef _WINDOWS
 #else
 	typedef unsigned int 		DWORD;
+
+	typedef long long 			INT64;
+	typedef char 				CHAR;
+	typedef wchar_t				WCHAR;
+	#ifdef _UNICODE
+
+	#else
+		#define _T(X)			X
+		typedef char			TCHAR;
+	#endif
 #endif
 typedef unsigned long long		QWORD;
+
+
+#include <Array.h>
+
+#include <MapDefPtr.h>
+#include <Map.h>
+
+#include <MyString.h>
+#include <GetTickCount.h>
+
+#ifdef _UNICODE
+	#define	T2M(X)	W2M(X)
+	#define	M2T(X)	M2W(X)
+	#define	T2W(X)	X
+	#define	W2T(X)	X
+	#define	TOM(X)	W2M(X)
+	#define	TOW(X)	X
+	#define	T2U(X)	W2U(X)
+	#define	U2T(X)	U2W(X)
+#else
+	#define	T2M(X)	X
+	#define	M2T(X)	X
+	#define	T2W(X)	M2W(X)
+	#define	W2T(X)	W2M(X)
+	#define	TOM(X)	X
+	#define	TOW(X)	M2W(X)
+	#define	T2U(X)	String(X)
+	#define	U2T(X)	String(X)
+#endif
 
 

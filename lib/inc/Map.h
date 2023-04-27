@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MAP_H
+#define __MAP_H
 
 template <typename T1, typename T2>
 class Map : public MapDefPtr<T1, T2>
@@ -29,7 +30,7 @@ public:
     }
 };
 
-
+#endif
 
 
 

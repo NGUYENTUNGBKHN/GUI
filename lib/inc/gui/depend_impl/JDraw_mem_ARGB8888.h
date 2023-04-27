@@ -63,6 +63,56 @@ public:
 			pPattern++;
 		}
     }
+
+    virtual void impl_LineH(int x, int y, int w)
+	{
+		if( (y < 0) || (y >= m_pDst->h()) )
+			return;
+		if( w < 0 )
+		{
+			w = -w;
+			x -= w;
+		}
+
+		int x2 = x + w;
+		if( x < 0 )
+			x = 0;
+		if( x2 > m_pDst->w() )
+			x2 = m_pDst->w();
+
+		BYTE* d = m_pDst->GetPixelAddress(x, y);
+		for( ; x<x2 ; x++ )
+		{
+			// modify here
+			*(DWORD*)d = m_cFillColor;
+			d += ((JImage_mem_ARGB8888*)m_pDst)->PIXEL;
+		}
+	}
+
+	virtual void impl_LineV(int x, int y, int h)
+	{
+		if( (x < 0) || (x >= m_pDst->w()) )
+			return;
+		if( h < 0 )
+		{
+			h = -h;
+			y -= h;
+		}
+
+		int y2 = y + h;
+		if( y < 0 )
+			y = 0;
+		if( y2 > m_pDst->h() )
+			y2 = m_pDst->h();
+
+		BYTE* d = m_pDst->GetPixelAddress(x, y);
+		for( ; y<y2 ; y++ )
+		{
+			// modify here
+			*(DWORD*)d = m_cFillColor;
+			d += ((JImage_mem_ARGB8888*)m_pDst)->LINE;
+		}
+	}
 private:
 
 };

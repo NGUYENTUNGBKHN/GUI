@@ -23,16 +23,20 @@
 #endif // DEBUG
 #define INFO(fmt, arg...) printf("MAIN (%d) : " fmt, __LINE__, ##arg)
 
+JRootWindow m_wndRoot;
+DWORD m_dwNext = 0;
 static Display *display;
 static Window win;
 static GC gc;
 static int screen;
 static Atom wm_delete_window;
-static JImage *p_JImage;
+static JImage *p_JImage = NULL;
+static bool m_bExiting = false;
 
 void Paint()
 {
-
+    XImage* pImage = XCreateImage(display, DefaultVisual(display, screen), 24, ZPixmap, 0, (char*)p_JImage->GetPixelAddress(0, 0), DISPLAY_W, DISPLAY_H, 32, DISPLAY_W * 4);
+	XPutImage(display, win, gc, pImage, 0, 0, 0, 0, DISPLAY_W, DISPLAY_H);
 }
 
 
@@ -76,10 +80,12 @@ void WorkMainLoop(void)
                 case ClientMessage:
                     if (e.xclient.data.l[0] == wm_delete_window)
                     {
+                        m_bExiting = true;
                         XDestroyWindow(display, win);
                     }
                     break;
                 case DestroyNotify:
+                    m_bExiting = true;
                     XSetCloseDownMode(display, DestroyAll);
     				XCloseDisplay(display);
 				    display = NULL;
@@ -89,6 +95,32 @@ void WorkMainLoop(void)
             }
         }
     }
+
+    if (!m_bExiting && (display != NULL))
+    {
+        // DWORD dwNow = m_wndRoot.getTime();
+		// if( dwNow >= m_dwNext )
+		// {
+		// 	m_dwNext = dwNow + 10;
+
+		// 	//
+		// 	static int div = 0;
+		// 	div = (div + 1) % 3;
+
+		// 	if( div == 0 )
+		// 	{
+		// 		// timer with render per 30ms
+		// 		// VWIN_WorkRootWindow_10ms(&m_wndRoot, s_pImage->GetPixelAddress(0, 0), NULL, NULL);
+		// 		Paint();
+		// 	}
+		// 	else
+		// 	{
+		// 		// timer per 10ms
+		// 		// VWIN_WorkRootWindow_10ms(&m_wndRoot, NULL, NULL, NULL);
+		// 	}
+		// }
+    }
+
 }
 
 int JWIN_Framework(int argc, char *argv[])
@@ -122,18 +154,24 @@ int JWIN_Framework(int argc, char *argv[])
 	XSelectInput(display, win, ButtonPressMask | ButtonReleaseMask | PointerMotionMask | ExposureMask | StructureNotifyMask);
 
 	XMapWindow(display, win);
-	// XFlush(display);
+	XFlush(display);
 
-	// if( (argc >= 2) && !strcmp(argv[1], "-nomainloop") )
-	// {
-	// 	return 0;
-	// }
+	//
+	m_wndRoot.Create(0, 0, DISPLAY_W, DISPLAY_H);
 
-	// main loop
-	// while( display != NULL )
-	// {
-	// 	XFlush(display);
-	// }
+	//
+	JWIN_Init(WorkMainLoop);
+	p_JImage = JWIN_NewVImage(DISPLAY_W, DISPLAY_H);
+
+	//
+	extern void APP_Init(JRootWindow* pRoot);
+	APP_Init(&m_wndRoot);
+
+	if( (argc >= 2) && !strcmp(argv[1], "-nomainloop") )
+	{
+		return 0;
+	}
+
     while(display != NULL)
     {
         XFlush(display);

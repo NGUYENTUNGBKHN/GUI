@@ -11,8 +11,15 @@ protected:
 private:
     /* data */
 public:
-    Array<T>(/* args */);
-    ~Array();
+
+    Array<T>(/* args */)
+    {
+
+    }
+    ~Array()
+    {
+
+    }
 
     int GetSize() const
     {

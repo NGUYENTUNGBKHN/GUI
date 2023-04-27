@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MAPDEFPTR_H
+#define __MAPDEFPTR_H
 
 #define BASE    std::map<T1, T2>
 #define DEFVAL  (*m_pDefaultValue)
@@ -38,7 +39,7 @@ public:
     Array<T1> Keys() const
     {
         Array<T1> a;
-        for (typename BASE::const_itertor i = BASE::begin(); i!=BASE::end(); i++)
+        for (typename BASE::const_iterator i = BASE::begin(); i!=BASE::end(); i++)
         {
             a.Add(i->first);
         }
@@ -85,3 +86,4 @@ public:
 #undef BASE
 #undef DEFVAL
 
+#endif // __MAPDEFPTR_H
