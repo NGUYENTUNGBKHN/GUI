@@ -23,8 +23,9 @@ class JRootWindow;
 #include "JButton.h"
 #include "JKeypad.h"
 
-extern JImage* JWIN_NewVImage();
-extern JImage* JWIN_NewVImage(int w, int h);
+extern JImage* JWIN_NewJImage();
+extern JImage* JWIN_NewJImage(int w, int h);
+extern JImage* LoadImage(const TCHAR* pPath);
 extern bool JKeypad_Init(JWindow* pParent);
 
 #include "JBusyWindow.h"

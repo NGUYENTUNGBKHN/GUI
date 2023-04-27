@@ -2,12 +2,31 @@
 #include "JWin.h"
 
 Array<JWindow*>		JWindow::s_aRoot;
+Map<String,String>	JWindow::s_mGlobalParam;
+Array<JTimer>		JWindow::s_aTimer;
+JWindow*			JWindow::s_pFocus = NULL;
+PFN_MAINLOOPENTRY	JWindow::s_pfnMainLoopEntry = NULL;
 
+static Map<String,JImage*> s_mPath2Image;
 
 bool JKeypad_Init(JWindow* pParent)
 {
 	// return JKeypad::Init(pParent);
     return true;
+}
+
+JImage* LoadImage(const TCHAR* pPath)
+{
+	if( s_mPath2Image.has(pPath) )
+		return s_mPath2Image[pPath];
+
+	extern JImage* _LoadImage(const TCHAR* pPath);
+	JImage* p = _LoadImage(pPath);
+	if( p == NULL )
+		return NULL;
+
+	s_mPath2Image[pPath] = p;
+	return p;
 }
 
 
@@ -39,9 +58,9 @@ bool JWIN_Init(PFN_MAINLOOPENTRY pfn)
 	return true;
 }
 
-JImage* VWIN_NewVImage(int w, int h)
+JImage* JWIN_NewJImage(int w, int h)
 {
-	JImage* p = VWIN_NewVImage();
+	JImage* p = JWIN_NewJImage();
 	if( !p->Create(w, h) )
 	{
 		delete p;

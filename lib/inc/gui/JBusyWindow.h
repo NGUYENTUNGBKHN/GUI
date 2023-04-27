@@ -154,8 +154,14 @@ public:
 private:
     /* data */
 public:
-    JBusyWindow(/* args */);
-    ~JBusyWindow();
+    JBusyWindow(/* args */)
+	{
+		
+	}
+    ~JBusyWindow()
+	{
+
+	}
 };
 
 

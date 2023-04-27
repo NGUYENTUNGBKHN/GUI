@@ -30,7 +30,8 @@ SRC_FILE = $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcar
 CPP_FLAG += -lX11 -lm 	# X11 library
 CPP_FLAG += -O2			# Optimize
 CPP_FLAG += -lfreetype
-CPP_FLAG += -MMD -MP -MF"$(@:%.o=%.d)" # dependency
+CPP_FLAG += -lpng16
+CPP_FLAG += -MMD -MP -MF"$(@:%.opp=%.d)" # dependency
 # Toolchain
 CXX=$(GUI_CXX)
 CC=$(GUI_CC)
@@ -68,9 +69,9 @@ clean: $(OUT_DIR)
 	@rm -r $<
 
 
--include $(wildcard $(PROJ_DIR)/*.d)
--include $(wildcard $(PROJ_DIR)/*/*.d)
--include $(wildcard $(PROJ_DIR)/*/*/*.d)
--include $(wildcard $(PROJ_DIR)/*/*/*/*.d)
--include $(wildcard $(PROJ_DIR)/*/*/*/*/*.d)
+-include $(wildcard $(OUT_OBJ_FILE)/*.d)
+-include $(wildcard $(OUT_OBJ_FILE)/*/*.d)
+-include $(wildcard $(OUT_OBJ_FILE)/*/*/*.d)
+-include $(wildcard $(OUT_OBJ_FILE)/*/*/*/*.d)
+-include $(wildcard $(OUT_OBJ_FILE)/*/*/*/*/*.d)
 

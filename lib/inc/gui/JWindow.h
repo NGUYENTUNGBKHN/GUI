@@ -342,6 +342,7 @@ public:
 
 	virtual void SetResource(JImage* pResource)
 	{
+		printf("%s %d \n",__func__, __LINE__);
 		m_pResource = pResource;
 		Invalidate();
 	}
@@ -459,9 +460,13 @@ public:
     virtual void Invalidate()
 	{
 		m_bInvalid = true;
+		// printf("%s %d \n",__func__, __LINE__);
 	}
 
-    ~JWindow();
+    ~JWindow()
+	{
+		
+	}
 };
 
 

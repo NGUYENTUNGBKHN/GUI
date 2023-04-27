@@ -755,12 +755,12 @@ public:
 		int w = 0;
 		int h = 0;
 		{
-			String1Array a = String(pText).splitExact(_T("\n"));
-			for( int i=0 ; i<a.GetSize() ; i++ )
-			{
-				w = max(w, g_FreeType.Render(this, 0, 0, 0, a[i], true));
-				h += (g_FreeType.m_Info[0].font_type.height * 110 / 100);
-			}
+			// String2Array a = String(pText).splitExact(_T("\n"));
+			// for( int i=0 ; i<a.GetSize() ; i++ )
+			// {
+			// 	w = max(w, g_FreeType.Render(this, 0, 0, 0, a[i], true));
+			// 	h += (g_FreeType.m_Info[0].font_type.height * 110 / 100);
+			// }
 		}
 		return JRect(0, 0, w, h);
 	}

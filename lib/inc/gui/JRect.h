@@ -68,7 +68,10 @@ public:
 	{
 		return !(*this == b);
 	}
-    ~JRect();
+    ~JRect()
+    {
+        
+    }
 private:
     /* data */
 };

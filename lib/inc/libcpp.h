@@ -56,7 +56,56 @@ typedef unsigned short			WORD;
 	#else
 		#define _T(X)			X
 		typedef char			TCHAR;
+		#define	_tcscpy		strcpy
+		#define	_tcscmp		strcmp
+		#define	_tcsstr		strstr
+		#define	_tcschr		strchr
+		#define	_tcslen		strlen
+		#define _fgetts		fgets
+		#define _fputts		fputs
+		#define _vsntprintf	vsnprintf
+		#define	_ttoi		atoi
+		#define	_ttoi64		atoll
+		#define	_ttof		atof
+		#define	_tfopen		fopen
+		#define	_stricmp	strcasecmp
+		#define	_wcsicmp	wcscasecmp
+		#define	_tcsicmp	strcasecmp
+		#define _vsnprintf	vsnprintf
+		#define _vsnwprintf	vswprintf
+		#define _tcstoul	strtoul
+		#define _tcstol		strtol
+		#define _unlink		unlink
+		#define _tunlink	unlink
+		#define _access		access
+		#define _taccess	access
+		#define _stscanf	sscanf
+		#define _stat		stat
+		#define _tstat		stat
+		#define _topen(X,Y)	open(X,Y)
+		#define _tcsftime	strftime
+		#define _trename	rename
 	#endif
+	typedef unsigned long	COLORREF;
+	#define GetRValue(X)	((X >>  0) & 255)
+	#define GetGValue(X)	((X >>  8) & 255)
+	#define GetBValue(X)	((X >> 16) & 255)
+	#define RGB(R,G,B)		((((R)&255) << 0) | (((G)&255) << 8) | (((B)&255) << 16))
+
+	typedef int				SOCKET;
+
+	#define _S_IFDIR		S_IFDIR
+	#define _S_IFREG		S_IFREG
+
+	typedef char*			LPSTR;
+	typedef WCHAR*			LPWSTR;
+	typedef TCHAR*			LPTSTR;
+	typedef const char*		LPCSTR;
+	typedef const WCHAR*	LPCWSTR;
+	typedef const TCHAR*	LPCTSTR;
+
+	#define gettid()		((pid_t)syscall(SYS_gettid))
+	#define DebugBreak()	raise(SIGTRAP)
 #endif
 typedef unsigned long long		QWORD;
 
@@ -68,6 +117,7 @@ typedef unsigned long long		QWORD;
 
 #include <MyString.h>
 #include <GetTickCount.h>
+
 
 #ifdef _UNICODE
 	#define	T2M(X)	W2M(X)
@@ -89,4 +139,6 @@ typedef unsigned long long		QWORD;
 	#define	U2T(X)	String(X)
 #endif
 
+#include "ByteArray.h"
+#include "File.h"
 

@@ -24,7 +24,10 @@ public:
 
     void Sort(bool bAsc=true);
     CLASSNAME Join(const CHARTYPE* pSep, const CHARTYPE* pBracket=NULL);
-    ~ARRAYNAME();
+    ~ARRAYNAME()
+	{
+		
+	}
 };
 
 class CLASSNAME : public BASE

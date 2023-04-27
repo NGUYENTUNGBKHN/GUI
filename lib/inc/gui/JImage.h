@@ -19,7 +19,10 @@ public:
         Destroy();
     }
 
-    virtual bool Create(int w, int h);
+    virtual bool Create(int w, int h)
+    {
+        return true;
+    }
 
     virtual int w() const 
     {
@@ -39,15 +42,17 @@ public:
     virtual unsigned char* GetPixelAddress(int x, int y) const
     {
         //
+        printf("%s %d \n",__func__, __LINE__);
         if ((x < 0) || (x >= m_nWidth) || (y < 0) || (y >= m_nHeight))
         {
-            return 0;
+            printf("%s %d (%d-%d)\n",__func__, __LINE__, x, y);
+            return NULL;
         }
         return GetPixelAddressFast(x, y);
     }
 
     virtual bool impl_Create(int w, int h) = 0;
-    virtual void Destroy();
+    virtual void Destroy() {}
     virtual unsigned char *GetPixelAddressFast(int x, int y) const = 0;
     virtual void Draw(JImage *pSrc, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh, int alpha=255) = 0;
 };
