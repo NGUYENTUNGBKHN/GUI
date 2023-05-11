@@ -20,7 +20,6 @@ public:
     // }
     virtual unsigned char* GetPixelAddressFast(int x, int y) const
 	{
-		printf("%s %d \n",__func__, __LINE__);
 		return m_pData + (y * LINE) + (x * PIXEL);
 	}
 

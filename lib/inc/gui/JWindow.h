@@ -380,6 +380,236 @@ public:
 		return m_rWindow.h;
 	}
 
+	virtual bool wantHFlick()
+	{
+		return false;
+	}
+
+	virtual bool wantVFlick()
+	{
+		return false;
+	}
+
+	virtual bool wantScale()
+	{
+		return false;
+	}
+
+	virtual bool wantSwipe()
+	{
+		return wantHSwipe() || wantVSwipe();
+	}
+
+	virtual bool wantHSwipe()
+	{
+		return false;
+	}
+
+	virtual bool wantVSwipe()
+	{
+		return false;
+	}
+
+	virtual bool wantDoubleClick()
+	{
+		return true;
+	}
+
+	virtual void onFlick(int nDirection, int nVelocity)
+	{
+	}
+
+	virtual void onBeginSwipe(int x, int y)
+	{
+	}
+
+	virtual void onSwipe(int vx, int vy)
+	{
+	}
+
+	virtual void onAfterSwipe()
+	{
+	}
+
+	virtual void onScale(int x, int y)
+	{
+	}
+
+	virtual void onDoubleClick(int x, int y)
+	{
+	}
+
+	virtual void onLongPush(int x, int y)
+	{
+	}
+
+	static void DoTimer_10ms()
+	{
+		{
+			for( int i=0 ; i<s_aRoot.GetSize() ; i++ )
+			{
+				JWindow* p = s_aRoot[i];
+
+				// after swipe
+				if( p->m_bSwipeDetected && (p->m_pWinLastTouch != NULL) && ((p->m_nAfterSwipeX != 0) || (p->m_nAfterSwipeY != 0)) )
+				{
+					p->m_nLastMoveX += p->m_nAfterSwipeX;
+					p->m_nLastMoveY += p->m_nAfterSwipeY;
+
+					for( JWindow* pTarget=p->m_pWinLastTouch ; pTarget!=NULL ; pTarget=pTarget->m_pParent )
+					{
+						if( pTarget->wantSwipe() )
+						{
+							pTarget->onSwipe(p->m_nLastMoveX - p->m_ptTouchStart.x, p->m_nLastMoveY - p->m_ptTouchStart.y);
+							break;
+						}
+					}
+
+					p->m_nAfterSwipeX = p->m_nAfterSwipeX * 90 / 100;
+					p->m_nAfterSwipeY = p->m_nAfterSwipeY * 90 / 100;
+
+					if( (p->m_nAfterSwipeX == 0) && (p->m_nAfterSwipeY) == 0 )
+					{
+						for( JWindow* pTarget=p->m_pWinLastTouch ; pTarget!=NULL ; pTarget=pTarget->m_pParent )
+						{
+							if( pTarget->wantSwipe() )
+							{
+								pTarget->onAfterSwipe();
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// exec timer
+		{
+			for( int i=(s_aTimer.GetSize() - 1) ; i>=0 ; i-- )
+			{
+				if( s_aTimer[i].nPeriod < 0 )
+				{
+					s_aTimer.RemoveAt(i);
+					continue;
+				}
+
+				JTimer& t = s_aTimer[i];
+				t.nRemain -= 10;
+				if( t.nRemain <= 0 )
+				{
+					t.nRemain += t.nPeriod;
+
+					if( t.bDisableWhenInvisible )
+					{
+						if( !(t.pWindow->visible()) )
+						{
+							continue;
+						}
+					}
+					t.pWindow->OnTimer(t.nId);
+
+					if( !t.bCyclic )
+					{
+						t.nPeriod = -1;
+					}
+				}
+			}
+		}
+	}
+
+	virtual void PrePaint(JDraw* pDraw, int w, int h)
+	{
+		m_nFontSizeSv = -1;
+		m_sFontNameSv = _T("");
+		if( m_sFontName != _T("") )
+		{
+			m_sFontNameSv = pDraw->GetFontName();
+			pDraw->SelectFontName(m_sFontName);
+		}
+		if( m_nFontSize > 0 )
+		{
+			printf("%s %d \n",__func__, __LINE__);
+			m_nFontSizeSv = pDraw->SelectFontSize(m_nFontSize);
+		}
+	}
+
+	virtual void OnPaint(JDraw* pDraw, int w, int h)
+	{
+		pDraw->FillRect(0, 0, w, h, rgb(64,64,64));
+	}
+
+	virtual void PostPaint(JDraw* pDraw, int w, int h)
+	{
+		if( m_sFontNameSv != _T("") )
+		{
+			pDraw->SelectFontName(m_sFontNameSv);
+		}
+		if( m_nFontSizeSv >= 0 )
+		{
+			pDraw->SelectFontSize(m_nFontSizeSv);
+		}
+	}
+
+	virtual bool OnChildPaint(const String& sId, JDraw* pDraw, int w, int h)
+	{
+		return false;
+	}
+
+	virtual int DoPaint(JDraw* pDraw, int x, int y)
+	{
+		//
+		int rc = 0;
+		m_nDoPaintLevel++;
+
+		bool bInvalid = m_bInvalid;
+		m_bInvalid = false;
+
+		//VPoint ptOffsetSv = pDraw->m_ptOffset;
+		//VRect rClipSv = pDraw->m_rClip;
+
+		//pDraw->m_ptOffset.x = x;
+		//pDraw->m_ptOffset.y = y;
+		pDraw->m_ptOffset.x = 0;
+		pDraw->m_ptOffset.y = 0;
+		pDraw->m_rClip.x = 0;
+		pDraw->m_rClip.y = 0;
+		pDraw->m_rClip.w = m_rWindow.w;
+		pDraw->m_rClip.h = m_rWindow.h;
+
+		if( bInvalid && visible() )
+		{
+			if( m_pOffScreen == NULL )
+			{
+				m_pOffScreen = JWIN_NewJImage(m_rWindow.w, m_rWindow.h);
+			}
+			if( (m_pOffScreen->w() != m_rWindow.w) || (m_pOffScreen->h() != m_rWindow.h) )
+			{
+				m_pOffScreen->Destroy();
+				m_pOffScreen->Create(m_rWindow.w, m_rWindow.h);
+			}
+
+			pDraw->m_pDst = m_pOffScreen;
+
+			PrePaint(pDraw, m_rWindow.w, m_rWindow.h);
+			OnPaint(pDraw, m_rWindow.w, m_rWindow.h);
+			PostPaint(pDraw, m_rWindow.w, m_rWindow.h);
+			rc = 1;
+		}
+
+		for( int i=0 ; i<m_aChildren.GetSize() ; i++ )
+		{
+			JWindow* p = m_aChildren[i];
+			if( p->visible() )
+				rc += p->DoPaint(pDraw, x + p->m_rWindow.x, y + p->m_rWindow.y);
+		}
+
+		//pDraw->m_ptOffset = ptOffsetSv;
+		//pDraw->m_rClip = rClipSv;
+
+		m_nDoPaintLevel--;
+		return rc;
+	}
+
     virtual void TileBlit(JDraw* pDst, JImage* pSrc, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh, int alpha=255, int horz=0, int vert=0)
 	{
 		if( horz < 1 )
@@ -461,6 +691,117 @@ public:
 	{
 		m_bInvalid = true;
 		// printf("%s %d \n",__func__, __LINE__);
+	}
+
+	virtual bool isRoot()
+	{
+		return false;
+	}
+
+	virtual bool isCheckBox()
+	{
+		return false;
+	}
+
+	virtual bool isRadioButton()
+	{
+		return false;
+	}
+
+	virtual bool isCanvas()
+	{
+		return false;
+	}
+
+	virtual bool isContainer()
+	{
+		return false;
+	}
+
+	virtual bool isScreen()
+	{
+		return false;
+	}
+
+	virtual bool isPosition()
+	{
+		return false;
+	}
+
+	virtual bool isScrollBar()
+	{
+		return false;
+	}
+
+	virtual bool isEdit()
+	{
+		return false;
+	}
+
+	virtual bool isListView()
+	{
+		return false;
+	}
+
+	virtual bool isSelector()
+	{
+		return false;
+	}
+
+	virtual bool isScrollWindow()
+	{
+		return false;
+	}
+
+	virtual bool isPanKuzu()
+	{
+		return false;
+	}
+
+	virtual bool abspos()
+	{
+		return m_bAbsPos;
+	}
+
+	virtual void abspos(bool b)
+	{
+		m_bAbsPos = b;
+	}
+
+	virtual void GetGlobalRect(JRect* pRect, bool bFixScrollParent=false);
+
+
+	void EnumChildren(Array<JWindow*>* pResult, bool bVisibleOnly, bool bExcludeThis=false, bool bIncludePrivate=false)
+	{
+		if( (pResult->GetSize() == 0) && !bExcludeThis )
+			pResult->Add(this);
+
+		for( int i=0 ; i<m_aChildren.GetSize() ; i++ )
+		{
+			JWindow* p = m_aChildren[i];
+			if( !bVisibleOnly || (bVisibleOnly && p->visible()) )
+			{
+				if( bIncludePrivate || !(p->isPrivate()) )
+				{
+					pResult->Add(p);
+					p->EnumChildren(pResult, bVisibleOnly, true, bIncludePrivate);
+				}
+			}
+		}
+	}
+
+	void EnumVisibleChildren(Array<JWindow*>* pResult)
+	{
+		EnumChildren(pResult, true, false, true);
+	}
+
+	virtual bool isPrivate()
+	{
+		return m_bPrivateWindow;
+	}
+	virtual void SetPrivate()
+	{
+		m_bPrivateWindow = true;
 	}
 
     ~JWindow()

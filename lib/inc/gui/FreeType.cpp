@@ -66,6 +66,7 @@ void FreeType::Select(int nFontId, int nSize)
 		FreeTypeInfo& fti = m_Info[i];
 
 		fti.face_id = (FTC_FaceID)nFontId;
+		printf("%s %d %d \n",__func__, __LINE__, nFontId);
 		FTC_Manager_LookupFace(cache_man, fti.face_id, &fti.face);
 
 		fti.scaler.face_id	= fti.face_id;

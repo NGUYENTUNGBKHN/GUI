@@ -3,7 +3,7 @@
 
 #ifdef _WINDOWS
 
-#else // _WINDOWS
+#else // LINUX
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <unistd.h>

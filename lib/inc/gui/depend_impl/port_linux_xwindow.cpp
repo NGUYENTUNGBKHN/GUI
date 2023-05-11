@@ -117,7 +117,7 @@ JImage *_LoadImage(const TCHAR *pPath)
         int width, height, depth, color_type;
         png_get_IHDR(png_ptr, info_ptr, (png_uint_32 *)&width, (png_uint_32 *)&height, &depth, &color_type, NULL, NULL, NULL);
         // printf("LoadImage: %S width=%d hwight=%d channels=%d color_type=%d \n", pPath, width, height, channels, color_type);
-        printf("%s %d \n",__func__, __LINE__);
+
 #if 0
 // deprecate for trans_values matching
 		double display_gamma = 2.2;
@@ -131,7 +131,7 @@ JImage *_LoadImage(const TCHAR *pPath)
 			png_set_gamma(png_ptr, display_gamma, 0.50);
 		}
 #endif
-        printf("%s %d \n",__func__, __LINE__);
+
         png_read_update_info(png_ptr, info_ptr);
 
         //
@@ -143,7 +143,7 @@ JImage *_LoadImage(const TCHAR *pPath)
         //	printf("channels=%d num_trans=%d trans_values[0]=%04x:%04x:%04x \n", channels, num_trans, trans_values[0].red, trans_values[0].blue, trans_values[0].green);
         // else
         //	printf("channels=%d num_trans=0 \n", channels);
-        printf("%s %d \n",__func__, __LINE__);
+
         //
         png_bytepp image;
         BYTE *buffer;
@@ -171,14 +171,16 @@ JImage *_LoadImage(const TCHAR *pPath)
                 image[i] = buffer + (lw * i);
         }
         png_read_image(png_ptr, image);
-        printf("%s %d \n",__func__, __LINE__);
+
         //
+        // printf("%s %d w = %d h = %d \n",__func__, __LINE__, width, height);
         pImage = JWIN_NewJImage(width, height);
         for (int y = 0; y < height; y++)
         {
             const BYTE *s = image[y];
+
             DWORD *d = (DWORD *)pImage->GetPixelAddress(0, y);
-            printf("%s %d d = %d \n",__func__, __LINE__, *d);
+            // printf("%s %d \n",__func__, __LINE__);
             if (channels == 4)
             {
                 for (int x = 0; x < width; x++)
@@ -212,13 +214,12 @@ JImage *_LoadImage(const TCHAR *pPath)
                 }
             }
         }
-        printf("%s %d \n",__func__, __LINE__);
+
         //
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
         free(image);
         //		free(buffer);	// double free?
     }
-    printf("%s %d \n",__func__, __LINE__);
     return pImage;
 }
 

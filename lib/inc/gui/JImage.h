@@ -21,6 +21,11 @@ public:
 
     virtual bool Create(int w, int h)
     {
+        if( !impl_Create(w, h)  )
+			return false;
+
+		m_nWidth = w;
+		m_nHeight = h;
         return true;
     }
 
@@ -41,11 +46,8 @@ public:
 
     virtual unsigned char* GetPixelAddress(int x, int y) const
     {
-        //
-        printf("%s %d \n",__func__, __LINE__);
         if ((x < 0) || (x >= m_nWidth) || (y < 0) || (y >= m_nHeight))
         {
-            printf("%s %d (%d-%d)\n",__func__, __LINE__, x, y);
             return NULL;
         }
         return GetPixelAddressFast(x, y);

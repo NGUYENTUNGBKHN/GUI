@@ -30,7 +30,7 @@ public:
 	StringArray					m_aHistoryStack;
 	bool						(*m_pfnPreJump)(const TCHAR* pId);
 	String						m_sTopId;
-	// VToastInfoArray				m_aToast;
+	JToastInfoArray				m_aToast;
 	Map<JScreen*,DelayLoadInfo>	m_mId2DelayLoadInfo;
 	Array<JScreen*>				m_aUnloadReq;
 public:
